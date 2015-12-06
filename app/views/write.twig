@@ -1,0 +1,53 @@
+{% extends 'template.twig' %}
+
+{% block title %}Write{% endblock %}
+
+{% block style %}
+
+<link rel="stylesheet" href="/public/css/write.css">
+
+{% endblock %}
+
+{% block content %}
+
+<div id="fragment" class="write-story">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<form class="dropzone" id="upload-post-photo">
+					<!-- <div class="form-group">
+						<div class="dropzone" id="dropzone-file-input">
+							<i class="fa fa-plus"></i> Tambahkan gambar
+							<div class="dropzone-previews" id="previews"></div>
+						</div>
+					</div> -->
+				</form>
+
+				<form role="form" id="title-content">
+
+					<div class="form-group">
+						<label for="title" class="sr-only">Judul</label>
+						<input type="text" class="form-control" id="post-title" name="title" placeholder="Title">
+					</div>
+
+					<div class="form-group" style="position: relative">
+						<label for="content" class="sr-only">Isi</label>
+						<span id="placeholder">Content</span>
+						<div id="write-content" contenteditable="true"></div>
+					</div>
+
+					<input type="hidden" name="${ csrf_key }" value="${ csrf_token }">
+					<input type="hidden" name="${ session.key }" value="${ session.value }">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.js"></script>
+<script src="/build/write-post.bundle.js"></script>
+{% endblock %}

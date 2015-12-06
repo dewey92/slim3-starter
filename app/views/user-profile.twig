@@ -1,0 +1,164 @@
+{% extends 'template.twig' %}
+
+{% block meta %}
+<meta name="description" content="${ user.fullName }">
+<meta name="author" content="${ user.displayName }">
+{% endblock %}
+
+{% block title %}${ user.fullName }'s profile{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/public/css/user-profile.css">
+{% endblock %}
+
+{% block content %}
+
+<div id="fragment" class="user-profile">
+	<div class="container">
+		<div class="row">
+			<!-- MAIN -->
+			<div class="col-md-9 col-sm-8">
+				<!-- NAME -->
+				<div class="row">
+					<div class="col-xs-5"></div>
+					<div class="col-xs-7">
+						<h1 id="user-full-name">${ user.fullName }</h1>
+					</div>
+				</div>
+				<section class="panel main-user-info">
+					<div class="panel-body">
+						<div class="row">
+
+							<div class="col-xs-5">
+								<img src="/user-uploads/${ user.user_id ~ '/' ~ user.avatar }" alt="${ user.fullName }" class="img-responsive img-circle user-avatar">
+							</div>
+
+							<div class="col-xs-4">
+								<section class="user-full-meta">
+									<p><i class="fa fa-fw fa-map-marker"></i>&nbsp;Jakarta</p>
+									<p><i class="fa fa-fw fa-clock-o"></i>&nbsp;Bergabung 15 Mei 2014</p>
+									<p><i class="fa fa-fw fa-star"></i>&nbsp;Rookie</p>
+									<p><i class="fa fa-fw fa-link"></i>&nbsp;<a href="http://${ user.blog }" title="${ user.blog }" target="__blank">${ user.blog }</a></p>
+								</section>
+							</div>
+
+							<div class="col-xs-3">
+								<button class="btn btn-danger btn-block hidden-xs" style="letter-spacing: 2px">
+									<i class="fa fa-fw fa-plus"></i>&nbsp;FOLLOW
+								</button>
+								<button class="btn btn-danger btn-block visible-xs-block">
+									<i class="fa fa-fw fa-plus"></i>&nbsp;FOLLOW
+								</button>
+							</div>
+
+						</div>
+						<!-- EDIT & USER SOCIALS -->
+						<div class="row">
+							<div class="col-xs-5 text-center">
+								<!-- <div class="edit-profile text-center">
+									<i class="fa fa-fw fa-pencil"></i>&nbsp;Edit profile
+								</div> -->
+								<h1 style="margin: 0"><small>${ user.displayName }</small></h1>
+								<div class="user-social">
+									<i class="fa fa-fw fa-twitter"></i>
+									<i class="fa fa-fw fa-facebook"></i>
+									<i class="fa fa-fw fa-instagram"></i>
+									<i class="fa fa-fw fa-envelope-o"></i>
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<p class="user-desc">${ user.description }</p>
+							</div>
+						</div>
+						<!-- STATS -->
+						<div class="row">
+							<div class="col-xs-5"></div>
+							<div class="col-xs-7">
+								<section class="user-stats text-center">
+									<!-- <div class="wrap-stats stat-icon">
+										<div class="equal-row"><i class="fa fa-lightbulb-o"></i></div>
+										<div class="equal-row"><i class="fa fa-arrow-circle-up"></i></div>
+										<div class="equal-row"><i class="fa fa-users"></i></div>
+									</div> -->
+									<div class="wrap-stats stat-number">
+										<div class="equal-row">${ user.posts.count() }</div>
+										<div class="equal-row">${ user.reputations }</div>
+										<div class="equal-row" ng-bind="user.followers">194</div>
+									</div>
+									<div class="wrap-stats stat-description">
+										<div class="equal-row">Ideas Shared</div>
+										<div class="equal-row">Reps</div>
+										<div class="equal-row">Followers</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- POSTS -->
+				<section class="panel" id="user-posts" v-cloak>
+					<div class="panel-body">
+						<h2>Posts</h2>
+						<div class="posts-wrapper">
+							<div class="list-box" v-for="post in userPosts">
+								<div class="dot"></div>
+
+								<article class="single-post">
+									<h3>
+										<a href="/post/{{ post.post_id }}/{{ post.slug }}" v-text="post.title" class="normal"></a>
+										<time class="pull-right" :title="post.created_at" v-text="post.created_at | calendar created_at"></time>
+									</h3>
+									<div class="post-content-wrapper">
+										<div class="post-content-overview" v-html="post.content_text | substr 0 300"></div>
+									</div>
+
+									<footer class="user-post-meta">
+										<div class="post-count-views">
+											<i class="fa fa-eye" title="total views"></i>
+											<span class="number" v-text="post.views"></span>
+										</div>
+										<div class="post-count-likes">
+											<i class="fa fa-heart" title="total likes"></i>
+											<span class="number" v-text="14"></span>
+										</div>
+										<div class="post-count-comments">
+											<i class="fa fa-comment" title="total comments"></i>
+											<span class="number" v-text="20"></span>
+										</div>
+										<div class="make-favourite pull-right">
+											<i class="fa fa-bookmark"
+												title="{{ post.faved ? 'Unfav' : 'Fav' }} this!"
+												v-class="{ 'toggled': postFaved }"></i>
+										</div>
+									</footer>
+
+								</article>
+
+							</div>
+						</div>
+					</div>
+				</section>
+
+			</div>
+			<!-- SIDEBAR -->
+			<div class="col-md-3 col-sm-4">
+				<div id="sidebar">
+					<component is="ideas-to-read"></component>
+					<component is="trending-tags"></component>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block prefooter %}
+	{% include 'partials/pre-footer.twig' %}
+{% endblock %}
+
+{% block script %}
+${ parent() }
+<script src="/build/user-profile.bundle.js"></script>
+{% endblock %}

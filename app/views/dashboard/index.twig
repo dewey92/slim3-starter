@@ -1,0 +1,55 @@
+{% extends 'template.twig' %}
+
+{% block meta %}
+<meta name="description" content="${ auth.fullName }">
+<meta name="author" content="${ auth.displayName }">
+{% endblock %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/public/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+
+<div id="app">
+	<aside id="left-panel">
+		<div class="text-center">
+			<img src="/user-uploads/${ auth.user_id }/${ auth.avatar }" alt="Your photo" class="img-circle left-avatar" />
+		</div>
+		<br>
+		<ul class="list-sidebar">
+			<li class="header">Dashboard</li>
+			<li v-repeat="menu in menus" v-class="active: isActive(menu.link)">
+				<a v-link="{ 'path' : menu.link }" v-on="click : onClick(menu.link)">
+					<i class="fa fa-fw fa-{{ menu.icon }}"></i>
+					{{ menu.text }}
+				</a>
+			</li>
+		</ul>
+		<br/>
+		<ul class="list-sidebar">
+			<li class="header">You</li>
+			<li><a href="${ urlFor('user', { displayName : auth.displayName }) }">Profile</a></li>
+			<li v-class="active: isActive('setting')"><a v-link="{ 'path' : 'setting' }" v-on="click : onClick('setting')">Setting</a></li>
+		</ul>
+		<br/>
+		<ul class="list-sidebar">
+			<li class="header">Rep Points</li>
+			<li><a v-link="">Progress bar</a></li>
+		</ul>
+	</aside>
+	<div id="dashboard-content">
+		<router-view class="trans" v-transition transition-mode="out-in"></router-view>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+${ parent() }
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.7/vue-router.min.js"></script>
+<script src="/build/dashboard.bundle.js"></script>
+{% endblock %}

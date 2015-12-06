@@ -1,0 +1,10 @@
+{% if error %}
+
+<div class="alert alert-danger">
+	<strong>Oops!</strong>
+	{% for msg_body in msg %}
+		<span class="msg-body">${ msg_body }</span>
+	{% endfor %}
+</div>
+
+{% endif %}

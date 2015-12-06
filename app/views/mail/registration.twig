@@ -1,0 +1,11 @@
+{% extends 'mail/mail_template.twig' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+
+<h1>Thank you for joining Katanium!</h1>
+<p>To activate your account please click this link: </p>
+<p>${ baseUrl ~ urlFor('activate') }?email=${ user.email }&identifier=${ identifier | url_encode }</p>
+
+{% endblock %}

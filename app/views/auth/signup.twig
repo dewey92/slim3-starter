@@ -1,0 +1,131 @@
+{% extends 'auth/auth_template.twig' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+
+<main id="main-container">
+	<div id="fragment" class="auth signup">
+		<div class="container">
+			<!-- <div class="text-center">
+				<a href="${ urlFor('home') }">
+					<img src="public/images/katanium_type.png" height="40" class="center-block" />
+				</a>
+				<hr/>
+				<br/>
+			</div> -->
+			<div class="row">
+				<!-- FOR SIGN IN -->
+				<div class="col-sm-8">
+					<div id="intro-signup">
+						<h1>Berbagi cerita dan ide, bersama.</h1>
+						<p>Temukan inpirasi menulismu disini, didukung dengan komunitas blogger terbesar di Indonesia</p>
+						<br>
+						<p class="text-info"><a href="${ urlFor('login') }">Have account? You can login here &rarr;</a></p>
+					</div>
+				</div>
+
+				<!-- FOR SIGN UP -->
+				<div class="col-sm-4" ng-controller="signupCtrl as signup">
+
+					<div class="alert alert-danger" ng-show="signup.isError">
+						<button type="button" class="close" ng-click="signup.closeAlert()" aria-hidden="true">&times;</button>
+						<strong>Opps!</strong>
+						<ol>
+							<li ng-repeat="msg in signup.msg" ng-bind="msg"></li>
+						</ol>
+					</div>
+
+					<form name="userForm" ng-submit="signup.submitForm(userForm.$valid)" novalidate>
+						<fieldset>
+							<!-- <legend class="text-center">Signup: </legend> -->
+							<div class="control-group" ng-class="{ 'has-error' : userForm.fullName.$invalid && ! userForm.fullName.$pristine }">
+								<label class="control-label sr-only" for="fullname">Full Name</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-fw fa-user-secret"></i></span>
+									<input
+										type="text"
+										id="fullname"
+										name="fullName"
+										ng-model="signup.formData.fullName"
+										ng-pattern="/^[a-zA-Z\s]+$/"
+										placeholder="Your full name"
+										class="form-control input-lg" required>
+								</div>
+								<span class="help-block" ng-show="userForm.fullName.$error.pattern">Invalid name. Use letters only</span>
+							</div>
+
+							<div class="control-group" ng-class="{ 'has-error' : userForm.email.$invalid && ! userForm.email.$pristine }">
+								<label class="control-label sr-only" for="email">E-mail</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+									<input
+										type="email"
+										id="email"
+										name="email"
+										ng-model="signup.formData.email"
+										placeholder="Your email"
+										class="form-control input-lg" required>
+								</div>
+								<span ng-show="userForm.email.$invalid && ! userForm.email.$pristine" class="help-block">Enter a valid email.</span>
+							</div>
+
+							<div class="control-group" ng-class="{ 'has-error' : userForm.password.$invalid && ! userForm.password.$pristine }">
+								<label class="control-label sr-only" for="password">Password</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+									<input
+										type="password"
+										id="password"
+										name="password"
+										ng-model="signup.formData.password"
+										ng-minlength="6"
+										placeholder="Create a password"
+										class="form-control input-lg" required>
+								</div>
+								<span class="help-block" ng-show="userForm.password.$error.minlength">Password should be at least 6 characters</span>
+							</div>
+
+							<div class="control-group" ng-class="{ 'has-error' : userForm.password_confirm.$invalid && ! userForm.password_confirm.$pristine }">
+								<label class="control-label sr-only" for="password_confirm">Password (Confirm)</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+									<input
+										type="password"
+										id="password_confirm"
+										name="password_confirm"
+										ng-model="signup.formData.password_confirm"
+										ng-change="signup.matchPassword()"
+										pwd-match="signup.formData.password"
+										placeholder="Confirm the password"
+										class="form-control input-lg" required>
+								</div>
+								<span class="help-block" ng-show="! signup.match && ! userForm.password_confirm.$pristine">Please confirm password</span>
+							</div>
+
+							<input type="hidden" id="csrf" name="${ csrf_key }" value="${ csrf_token }">
+
+							<p class="text-muted">
+								By clicking "Join Katanium", you agree to our terms of service and privacy policy. We will send you account related emails occasionally.
+							</p>
+
+							<div class="control-group">
+								<br/>
+								<button type="submit" class="btn btn-primary btn-block" ng-disabled="userForm.$invalid" ng-bind="signup.submitText"></button>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+<script src="/public/js/controllers/signupCtrl.js"></script>
+
+{% endblock %}

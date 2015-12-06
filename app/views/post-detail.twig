@@ -1,0 +1,175 @@
+{% extends 'template.twig' %}
+
+{% block meta %}
+<meta name="author" content="${ post.user.fullName }">
+<meta name="description" content="${ cut_str(post.content_text, 0, 150) }">
+<meta name="csrf_token" content="${ csrf_token }">
+<link rel="canonical" href="http://katanium.com/post/5/cuman-tes-aja-gak-perlu-kok-berhasil">
+{# <meta name="keywords" content="${ cut_str(post.content_text, 0, 150) }"> #}
+<!-- Facebook OpenGraph -->
+<meta property="og:title" content="${ post.title }" />
+<meta property="og:site_name" content="Katanium"/>
+<meta property="og:url" content="http://www.myfavnews.com/2013/1/1/workday-price-range" />
+<meta property="og:description" content="${ cut_str(post.content_text, 0, 500) }" />
+<meta property="og:image" content="http://katanium.com/user-uploads/${ post.author }/${ post.post_image }" />
+<meta property="og:type" content="article" />
+<meta property="article:author" content="https://www.facebook.com/dewey.macro" />
+<meta property="article:publisher" content="https://www.facebook.com/cnn" />
+<meta property="article:published_time" content="${ post.created_at }" />
+<meta property="article:modified_time" content="${ post.updated_at }" />
+<meta property="fb:app_id" content="1234567890" />
+
+<!-- Schema.org markup for Google+ -->
+<meta itemprop="name" content="${ post.title }">
+<meta itemprop="description" content="cut_str(post.content_text, 0, 200)">
+<meta itemprop="image" content="http://katanium.com/user-uploads/${ post.author }/${ post.post_image }">
+
+<!-- Twitter Card data -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@publisher_handle">
+<meta name="twitter:title" content="${ post.title }">
+<meta name="twitter:description" content="cut_str(post.content_text, 0, 190)">
+<meta name="twitter:creator" content="@author_handle">
+<!-- Twitter summary card with large image must be at least 280x150px -->
+<meta name="twitter:image:src" content="http://katanium.com/user-uploads/${ post.author }/${ post.post_image }">
+{% endblock %}
+
+{% block title %}${ post.title }{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/public/css/post-detail.css">
+{% endblock %}
+
+{% block content %}
+
+<div id="fragment" class="post-detail">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 col-sm-8">
+				<div id="post-detail-content" data-pid="${ post.post_id }">
+
+					<header class="bg-cover" style="background-image: url('/user-uploads/7/post-1.jpg');">
+						<div class="layer">
+							<div class="row">
+								<div class="col-xs-10 col-xs-offset-1">
+									<h1>${ post.title }</h1>
+									<div class="row meta-post-author">
+										<div class="col-xs-4 col-sm-3">
+											<img src="/user-uploads/7/ngganteng.jpg" alt="post.user.fullName" class="img-responsive img-circle">
+										</div>
+										<div class="col-xs-8 col-sm-9">
+											<div>
+												<a href="${ urlFor('user', { 'displayName' : post.user.displayName }) }">
+													${ post.user.fullName }
+												</a>
+											</div>
+											<div>
+												<a href="${ urlFor('user', { 'displayName' : post.user.displayName }) }">
+													<h3>${ post.user.fullName }</h3>
+												</a>
+											</div>
+											<ul class="list-inline author-social-account">
+												<li>
+													<a href="http://twitter.com/"><i class="fa fa-twitter"></i></a>
+												</li>
+												<li>
+													<a href="http://facebook.com/"><i class="fa fa-facebook"></i></a>
+												</li>
+												<li>
+													<a href="http://instagram.com/"><i class="fa fa-instagram"></i></a>
+												</li>
+												<li>
+													<a href="http://googleplus.com/"><i class="fa fa-google-plus"></i></a>
+												</li>
+											</ul>
+											<div>
+												<button class="btn btn-sm btn-white btn-border rounded">
+													<i class="fa fa-fw fa-plus"></i> Follow Me
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</header>
+
+					<div class="row">
+						<div class="col-xs-10 col-xs-offset-1">
+
+							<div class="post-detail-meta">
+								<time>Posted on ${ post.created_at | date('d M Y') }</time>
+								<div class="post-detail-tags">
+									<ul class="list-inline">
+										<li>
+											<span class="badge">#technology</span>
+										</li>
+										<li>
+											<span class="badge">#startup</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="post-content-wrapper">
+								<div id="real-post-content">
+									${ post.content | raw }
+								</div>
+								<p class="text-center">
+									<a href="${ post.url }" target="_blank" class="btn btn-danger rounded">Baca selengkapnya &rarr;</a>
+								</p>
+								<div class="share-social text-center">
+									<h4 class="text-uppercase">Share this post</h4>
+									<ul class="list-inline">
+										<li>
+											<button class="btn btn-twitter rounded">
+												<i class="fa fa-fw fa-twitter"></i>
+											</button>
+										</li>
+										<li>
+											<button class="btn btn-facebook rounded">
+												<i class="fa fa-fw fa-facebook"></i>
+											</button>
+										</li>
+										<li>
+											<button class="btn btn-google-plus rounded">
+												<i class="fa fa-fw fa-google-plus"></i>
+											</button>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<post-options></post-options>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-10 col-xs-offset-1">
+							<post-comments-list logged-in="${ loggedIn }"></post-comments-list>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<aside class="col-md-3 col-sm-4">
+				<div id="sidebar">
+					<leaderboard></leaderboard>
+					<trending-tags></trending-tags>
+				</div>
+			</aside>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block prefooter %}
+	{% include 'partials/pre-footer.twig' %}
+{% endblock %}
+
+{% block script %}
+${ parent() }
+<script src="/build/read-post.bundle.js"></script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'auth/auth_template.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<main id="main-container">
+	<div id="fragment" class="auth login">
+		<div class="container">
+			<!-- <div class="text-center">
+				<a href="${ urlFor('home') }">
+					<img src="public/images/katanium_type.png" height="40" class="center-block" />
+				</a>
+				<hr/>
+				<br/>
+			</div> -->
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-5 col-sm-offset-1">
+									<h1 class="h3">Log in to Katanium</h1>
+
+									{% include 'partials/message.twig' %}
+
+									<form action="${ urlFor('login') }" method="POST" role="form">
+										<div class="form-group">
+											<label for="email" class="control-label sr-only">Email</label>
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+												<input
+													type="email"
+													name="email"
+													class="form-control"
+													id="email"
+													{% if request.email %}value="${ request.email }" autofocus {% endif %}
+													placeholder="Your email" required>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="password" class="control-label sr-only">Password</label>
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+												<input
+													type="password"
+													name="password"
+													class="form-control"
+													id="password"
+													placeholder="Your password" required>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="checkbox">
+												<label for="remember" class="control-label">
+													<input
+														type="checkbox"
+														name="remember"
+														id="remember"
+														placeholder="Your password">
+													Remember me
+												</label>
+											</div>
+										</div>
+
+										<input type="hidden" v-el="token" name="${ csrf_key }" value="${ csrf_token }">
+										<input type="hidden" name="redirectUrl" value="${ redirectUrl }">
+
+										<button type="submit" class="btn btn-danger btn-block" data-loading-text="Signin in...">Login</button>
+									</form>
+								</div>
+						   </div>
+						</div>
+						<div class="panel-footer">
+							<div class="row">
+								<div class="col-sm-5 col-sm-offset-1">
+									<p style="margin: 10px 0">New to Katanium? <a href="${ urlFor('register') }">Signup now &rarr;</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+{% endblock %}

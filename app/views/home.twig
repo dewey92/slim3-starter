@@ -1,0 +1,93 @@
+{% extends 'template.twig' %}
+
+{% block meta %}
+<meta name="description" content="Katanium adalah wadah para blogger untuk berbagi dan mencari inspirasi">
+<!-- Facebook OpenGraph -->
+<meta property="og:title" content="Katanium | Tempatnya Blogger" />
+<meta property="og:site_name" content="Katanium"/>
+<meta property="og:url" content="http://www.katanium.com" />
+<meta property="og:description" content="Katanium adalah wadah para blogger untuk berbagi dan mencari inspirasi" />
+<meta property="og:image" content="http://katanium.com/public/images/logo-circle.png" />
+<meta property="og:type" content="website" />
+<meta property="article:author" content="https://www.facebook.com/katanium" />
+<meta property="fb:app_id" content="1234567890" />
+
+<!-- Schema.org markup for Google+ -->
+<meta itemprop="name" content="Katanium">
+<meta itemprop="description" content="Katanium adalah wadah para blogger untuk berbagi dan mencari inspirasi">
+<meta itemprop="image" content="http://katanium.com/public/images/logo-circle.png">
+
+<!-- Twitter Card data -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="http://katanium.com">
+<meta name="twitter:title" content="Katanium | Tempatnya Blogger">
+<meta name="twitter:description" content="Katanium adalah wadah para blogger untuk berbagi dan mencari inspirasi">
+<meta name="twitter:creator" content="@katanium">
+<!-- Twitter summary card with large image must be at least 280x150px -->
+<meta name="twitter:image:src" content="http://katanium.com/public/images/logo-circle.png">
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/public/css/home.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- <div id="cloak">
+  <h3>Wait a moment while aligning content ..</h3>
+  <p>
+    <i class="fa fa-refresh fa-spin"></i>
+  </p>
+</div> -->
+<div id="intro-bar">
+  <div class="container text-center">
+    <h1>Stay Inspired</h1>
+    <h1><small>enjoy your journey of creativity</small></h1>
+    <br>
+
+    {% if not auth %}
+
+    <ul class="list-inline">
+      <li>
+        <a href="#login-modal" class="btn btn-white btn-border rounded" data-toggle="modal" role="button">Sign in</a>
+      </li>
+      <li>
+        <a href="${ path_for('register') }" class="btn btn-white btn-border rounded">Sign up</a>
+      </li>
+    </ul>
+
+    {% endif %}
+
+  </div>
+</div>
+<div id="fragment" class="home">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-9 col-sm-8">
+        <posts-tiles></posts-tiles>
+      </div>
+
+      <div class="col-md-3 col-sm-4">
+        <leaderboard></leaderboard>
+        <trending-tags></trending-tags>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block prefooter %}
+  {% include 'partials/pre-footer.twig' %}
+{% endblock %}
+
+{% block script %}
+${ parent() }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.0/masonry.pkgd.min.js"></script>
+<script src="/public/js/libs/imagesloaded.pkgd.min.js"></script>
+<script src="/build/home.bundle.js"></script>
+{% endblock %}
