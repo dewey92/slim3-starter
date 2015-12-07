@@ -16,7 +16,7 @@ $app->add(function ($req, $res, $next) {
 		  'driver'   => 'pdo_mysql',
 		];
 
-		DatabaseAdapter::setConnection(\Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config));
+		DatabaseAdapter::setDBConnection(\Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config));
 	}
 
 	return $next($req, $res);

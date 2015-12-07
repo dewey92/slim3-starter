@@ -5,9 +5,6 @@ use Katanium\Helpers\Hash;
 use Katanium\Helpers\Validator;
 use Katanium\Mail\Mailer;
 
-require 'config/development.php';
-require 'config/production.php';
-
 $c = new \Slim\Container();
 
 /**
@@ -23,12 +20,12 @@ $c['mode'] = function ($c) {
  * Get configurations
  *
  * the functions inside refer to the two files
- * included at the top of the file
+ * included at the parameter
  *
  * @return array
  */
 $c['myConfig'] = function ($c) {
-  return $c->get('mode') === 'development' ? getDevelopmentSettings() : getProductionSettings();
+  return new \Noodlehaus\Config( $c->get('mode') === 'development' ? 'config/development.php' : 'config/production.php' );
 };
 
 /**
@@ -60,13 +57,13 @@ $c['csrf'] = function ($c) {
  *
  * @return Closure
  */
-$c['errorHandler'] = function ($c) {
+/*$c['errorHandler'] = function ($c) {
   return function ($request, $response, $exception) use ($c) {
-    /*return $c['response']->withStatus(500)
+    return $c['response']->withStatus(500)
       ->withHeader('Content-Type', 'text/html')
-      ->write('Something went wrong!');*/
+      ->write('Something went wrong!');
   };
-};
+};*/
 
 /**
  * Register Twig View Helper with some view configs
@@ -90,7 +87,7 @@ $c['view'] = function ($c) {
   $lexer = new Twig_Lexer($twig, array(
     'tag_comment'   => array('{#', '#}'),
     'tag_block'     => array('{%', '%}'),
-    'tag_variable'  => array('${', '}'),
+    'tag_variable'  => array('{{$', '}}'),
     'interpolation' => array('#{', '}')
   ));
   $twig->setLexer($lexer);

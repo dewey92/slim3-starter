@@ -2,36 +2,42 @@
 
 use Katanium\Models\User;
 
-/* Render the register page */
-$app->get('/register', $guest(), function() use($app) {
-	//render it!
-	$app->view()->appendData(['signup' => true]);
-	$app->render('auth/signup.twig');
+/**
+ * Render the register page
+ *
+ * Simply render
+ */
+$app->get('/register', function($req, $res, $args) {
 
-})->name('register');
+	return $this->view->render($res, 'auth/signup.twig', ['signup' => true]);
 
-/* Create the user */
-$app->post('/register', $guest(), function() use($app) {
+})->setName('register')->add($app->getContainer()['guest']);
 
-	$post = $app->req;
+
+/**
+ * Proccess register data
+ */
+$app->post('/register', function($req, $res, $args) use($app) {
+
+	$params = $req->getParams();
 
 	// Set validator
-	$v = $app->validator;
+	$v = $this['validator'];
 	$v->validate([
-		'email'            => [ $post->email, 'required|email|uniqueEmail' ],
-		'fullName'         => [ $post->fullName, 'required' ],
-		'password'         => [ $post->password, 'required|min(6)' ],
-		'password_confirm' => [ $post->password_confirm, 'required|matches(password)' ]
+		'email'            => [ params['email'], 'required|email|uniqueEmail' ],
+		'fullName'         => [ params['fullName'], 'required' ],
+		'password'         => [ params['password'], 'required|min(6)' ],
+		'password_confirm' => [ params['password_confirm'], 'required|matches(password)' ]
 	]);
 
 	if( $v->passes() ) {
 		// Before anything else, generate a random string
 		// with the purpose of activating the newly-registred user later
-		$identifier = $app->randomlib->generateString(128);
+		$identifier = $this['randomlib']->generateString(128);
 
 		// Create username
 		// Take 'dewey992' out of dewey992@gmail.com
-		$uname = explode('@', $post->email);
+		$uname = explode('@', params['email']);
 		$user  = new User;
 
 		// then check if the username already exists
@@ -50,9 +56,9 @@ $app->post('/register', $guest(), function() use($app) {
 		// Save to DB
 		$user->email       = $post->email;
 		$user->fullName    = $post->fullName;
-		$user->password    = $app->hash->password( $post->password );
+		$user->password    = $this['hash']->password( $post->password );
 		$user->active      = 0;
-		$user->active_hash = $app->hash->hash( $identifier );
+		$user->active_hash = $this['hash']->hash( $identifier );
 
 		$user->save();
 
@@ -61,7 +67,7 @@ $app->post('/register', $guest(), function() use($app) {
 			'user'       => $user,
 			'identifier' => $identifier
 		);
-		$app->mail->send('mail/registration.twig', $data, function($message) use($user) {
+		$this['mail']->send('mail/registration.twig', $data, function($message) use($user) {
 			// define the email message
 			$message->to( $user->email );
 			//$message->subject('Terima kasih telah mendaftar di Katanium');
@@ -77,9 +83,8 @@ $app->post('/register', $guest(), function() use($app) {
 		$errors = $v->errors()->all();
 
 		// Output the message
-		$app->response->setStatus(400);
-		$app->response->headers->set('Content-Type', 'application/json');
+		$res->withStatus(400)->withHeader('Content-Type', 'application/json');
 		die( json_encode([ 'msg' => $errors, 'error' => true ]) );
 	}
 
-})->name('register.post');
+})->setName('register.post')->add($app->getContainer()['guest']);

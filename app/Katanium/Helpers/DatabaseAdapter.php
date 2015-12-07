@@ -9,15 +9,15 @@ namespace Katanium\Helpers;
 */
 class DatabaseAdapter
 {
-	protected $db = null;
+	protected static $db = null;
 
-	public function getDBConnection()
+	public static function getDBConnection()
 	{
-		return $this->db;
+		return static::$db;
 	}
 
-	public function setDBConnection($conn)
+	public static function setDBConnection($conn)
 	{
-		$this->db = $conn;
+		static::$db = $conn;
 	}
 }

@@ -2,24 +2,24 @@
 
 use Katanium\Models\User;
 
-$app->get('/activate', $guest(), function() use($app) {
+$app->get('/activate', function($req, $res, $args) {
 	// Get the email and identifier
-	$request    = $app->request;
-	
-	$email      = $request->get('email');
-	$identifier = $request->get('identifier');
-	
-	$hashedID   = $app->hash->hash($identifier);
+	$params = $req->getParams();
+
+	$email      = $params['email'];
+	$identifier = $params['identifier'];
+
+	$hashedID   = $this->get('hash')->hash($identifier);
 	$user       = User::where('email', $email)->where('active', 0)->first();
 
-	if ( ! $user || ! $app->hash->hashCheck($user->active_hash, $hashedID) ) {
+	if ( ! $user || ! $this->get('hash')->hashCheck($user->active_hash, $hashedID) ) {
 		$app->flash('msg', 'Maaf, terdapat kesalahan dalam pengaktifan akun Anda di Katanium');
 	}
 	else {
 		$user->activateAccount();
 
 		$app->flash('msg', 'Akun Anda telah aktif. Anda bisa login sekarang');
-		return $app->redirect($app->urlFor('dashboard')); // Redirect to user-profile
+		return $res->withRedirect($this->router->path_for('dashboard')); // Redirect to user-profile
 	}
 
-})->name('activate');
+})->setName('activate')->add($app->getContainer()['guest']);

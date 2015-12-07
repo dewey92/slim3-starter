@@ -1,12 +1,14 @@
 <div class="modal fade" id="login-modal">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
+
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Login</h4>
 			</div>
+
 			<div class="modal-body">
-				<form action="${ urlFor('login.post') }" method="POST" role="form">
+				<form action="{{$ path_for('login.post') }}" method="POST" role="form">
 					<div class="form-group">
 						<label for="email" class="control-label sr-only">Email</label>
 						<div class="input-group">
@@ -46,15 +48,18 @@
 						</div>
 					</div>
 
-					<input type="hidden" name="${ csrf_key }" value="${ csrf_token }">
+					<input type="hidden" name="{{$ name_key }}" value="{{$ name }}">
+					<input type="hidden" name="{{$ value_key }}" value="{{$ value }}">
 					<input type="hidden" name="redirectUrl" value="">
 
 					<button type="submit" class="btn btn-danger btn-block" data-loading-text="Signin in...">Login</button>
 				</form>
 			</div>
+
 			<div class="modal-footer">
-				<a href="${ urlFor('register') }" id="button-to-signup">Don't have account yet? &raquo;</a>
+				<a href="{{$ path_for('register') }}" id="button-to-signup">Don't have account yet? &raquo;</a>
 			</div>
+
 		</div>
 	</div>
 </div>

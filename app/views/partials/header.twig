@@ -1,5 +1,6 @@
 <nav class="navbar navbar-primary navbar-fixed-top white{% if home %} transparent{% endif %}" role="navigation">
 	<div class="container-fluid">
+
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-nav">
@@ -8,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="${ urlFor('home') }">
+			<a class="navbar-brand" href="{{$ path_for('home') }}">
 				<img src="/public/images/logo-circle.png" alt="Katanium">
 			</a>
 		</div>
@@ -32,27 +33,27 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li>
 						<a href="#" class="navbar-btn btn-link dropdown-toggle" id="user-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="/user-uploads/${ auth.user_id }/${ auth.avatar }" id="logged-user-pp" class="img-circle" alt="${ auth.displayName }" height="34" />
+							<img src="/user-uploads/{{$ auth.user_id }}/{{$ auth.avatar }}" id="logged-user-pp" class="img-circle" alt="{{$ auth.displayName }}" height="34" />
 						</a>
-						<ul class="dropdown-menu wider" data-uid="${ auth.user_id }" data-displayname="${ auth.displayName }">
+						<ul class="dropdown-menu wider" data-uid="{{$ auth.user_id }}" data-displayname="{{$ auth.displayName }}">
 							<li class="dropdown-item">
 								<ul class="list-unstyled text-center">
 									<li>
-										<a href="${ urlFor('user', { 'displayName' : auth.displayName }) }" title="${ auth.displayName }'s photo">
-											<img src="/user-uploads/${ auth.user_id }/${ auth.avatar }" alt="User photo" class="img-circle" width="90"/>
+										<a href="{{$ path_for('user', { 'displayName' : auth.displayName }) }}" title="{{$ auth.displayName }}'s photo">
+											<img src="/user-uploads/{{$ auth.user_id }}/{{$ auth.avatar }}" alt="User photo" class="img-circle" width="90"/>
 										</a>
 									</li>
 									<li>
-										<a href="${ urlFor('user', { 'displayName' : auth.displayName }) }" class="normal">${ '@' ~ auth.displayName }</a>
+										<a href="{{$ path_for('user', { 'displayName' : auth.displayName }) }}" class="normal">{{$ '@' ~ auth.displayName }}</a>
 									</li>
 									<li>
-										<a href="${ urlFor('user', { 'displayName' : auth.displayName }) }" class="normal">${ auth.fullName }</a>
+										<a href="{{$ path_for('user', { 'displayName' : auth.displayName }) }}" class="normal">{{$ auth.fullName }}</a>
 									</li>
 									<li>
 										<ul class="list-inline">
 											<li>
-												<a href="${ urlFor('user', { 'displayName' : auth.displayName }) }" class="btn btn-sm btn-primary rounded" role="button">Profile</a>
-												<a href="${ urlFor('dashboard') }" class="btn btn-sm btn-primary rounded" role="button">Dashboard</a>
+												<a href="{{$ path_for('user', { 'displayName' : auth.displayName }) }}" class="btn btn-sm btn-primary rounded" role="button">Profile</a>
+												<a href="{{$ path_for('dashboard') }}" class="btn btn-sm btn-primary rounded" role="button">Dashboard</a>
 											</li>
 										</ul>
 									</li>
@@ -68,7 +69,7 @@
 								</div>
 							</li>
 							<li role="separator" class="divider"></li>
-							<li><a href="${ urlFor('logout') }">Logout</a></li>
+							<li><a href="{{$ path_for('logout') }}">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -86,7 +87,7 @@
 					{% if not dashboard %}
 						<ul class="nav navbar-nav navbar-right">
 							<li>
-								<a href="${ urlFor('write') }" class="btn navbar-btn rounded{% if home %} btn-white{% else %} btn-primary{% endif %}" role="button" style="padding: 6px 10px">
+								<a href="{{$ path_for('write') }}" class="btn navbar-btn rounded{% if home %} btn-white{% else %} btn-primary{% endif %}" role="button" style="padding: 6px 10px">
 									<i class="fa fa-pencil"></i>
 								</a>
 							</li>

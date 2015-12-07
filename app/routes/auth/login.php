@@ -2,66 +2,75 @@
 
 use Katanium\Models\User;
 
-/* Render the register page */
-$app->get('/login', $guest(), function() use($app) {
+/**
+ * Get the login page
+ *
+ * Additionally, pass URL to the login page where it should redirect
+ * after submitting the username & password for user convenience
+ *
+ * @param $_GET['redirectUrl'] the URL where the page should redirect
+ */
+$app->get('/login', function($req, $res, $args) {
 
-	$redirectUrl = isset($_GET['redirectUrl']) ? $_GET['redirectUrl'] : $app->urlFor('home');
+	$httpGet     = $req->getQueryParams();
+	$redirectUrl = count($httpGet) ? $httpGet['redirectUrl'] : $app->urlFor('home');
 
-	//render it!
-	$app->view()->appendData(['login' => true, 'redirectUrl' => $redirectUrl]);
-	$app->render('auth/login.twig');
+	$data = [
+		'login'       => true,
+		'redirectUrl' => $redirectUrl
+	];
 
-})->name('login');
+	return $this->view->render($res, 'auth/login.twig', $data);
 
-/* Login process */
-$app->post('/login', $guest(), function() use($app) {
+})->setName('login')->add($app->getContainer()['guest']);
 
-	$req = $app->req;
+/**
+ * Proccess login data
+ */
+$app->post('/login', function($req, $res, $args) use($app) {
+	$params = $req->getParams();
 
-	// Set validator
-	$v = $app->validator;
+	$v = $this['validator'];
 	$v->validate([
-		'email'    => [ $req->email, 'required|email' ],
-		'password' => [ $req->password, 'required' ]
+		'email'    => [$params['email'], 'required|email'],
+		'password' => [$params['password'], 'required']
 	]);
 
-	if (empty( $req->remember )) {
-		$req->remember = 'off';
-	}
+	$params['remember'] = isset($params['remember']) ? $params['remember'] : 'off';
 
 	if( $v->passes() ) {
 		// Search in DB
 		$user = User::where('email', $req->email)->active()->first();
 
 		// If email and password both exist and match in database
-		if( $user && $app->hash->passwordCheck( $req->password, $user->password ) ) {
+		if( $user && $this['hash']->passwordCheck( $req->password, $user->password ) ) {
 			// Set session for login
-			$_SESSION[$app->config->get('auth.session')] = $user->user_id;
+			$_SESSION[ $this['myConfig']->get('auth.session') ] = $user->user_id;
 
-			if ($req->remember === 'on') {
+			if ($req['remember'] === 'on') {
 				$rememberIdentifier = $app->randomlib->generateString(128);
 				$rememberToken      = $app->randomlib->generateString(128);
 
 				$user->updateRememberCredentials(
 					$rememberIdentifier,
-					$app->hash->hash($rememberToken)
+					$this['hash']->hash($rememberToken)
 				);
 
 				// Set the cookie
 				$app->setCookie(
-					$app->config->get('auth.remember'),
+					$this['myConfig']->get('auth.remember'),
 					"{$rememberIdentifier}___{$rememberToken}",
 					\Carbon\Carbon::parse('+1 week')->timestamp
 				);
 			}
 
 			// Notify and rediect to where it should belong
-			$redirectUrl = $req->redirectUrl !== $app->urlFor('login') ? $req->redirectUrl : $app->urlFor('home');
+			$redirectUrl = $params['redirectUrl'] !== $this->router->pathFor('login') ? $params['redirectUrl'] :  $this->router->pathFor('home');
 
-			return $app->response->redirect( $redirectUrl );
+			return $res->withRedirect($redirectUrl);
 		}
 		else {
-			$app->render('auth/login.twig', [
+			return $this->view->render($res, 'auth/login.twig', [
 				'error'   => true,
 				'msg'     => ['Email dan password tidak cocok'],
 				'request' => $req
@@ -69,11 +78,11 @@ $app->post('/login', $guest(), function() use($app) {
 		}
 	}
 	else {
-		$app->render('auth/login.twig', [
+		$this->view->render($res, 'auth/login.twig', [
 			'error'   => true,
 			'msg'     => $v->errors()->all(),
 			'request' => $req
 		]);
 	}
 
-})->name('login.post');
+})->setName('login.post')->add($app->getContainer()['guest']);

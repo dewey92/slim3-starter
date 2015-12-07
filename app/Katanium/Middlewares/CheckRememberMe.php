@@ -58,7 +58,7 @@ class CheckRememberMe
 	protected function checkRememberMe(Request $req, Response $res)
 	{
 		dd(Cookies::get('hihi')); die();
-		$cookie = $this->app->cookies->get($this->c->get('myConfig')['auth']['remember']);
+		$cookie = $this->app->cookies->get($this->c['myConfig']->get('auth.remember'));
 
 		if ($cookie && ! $this->app->auth) {
 			$credentials = explode('___', $cookie);
@@ -77,7 +77,7 @@ class CheckRememberMe
 			if ($user) {
 				if ($hashLib->hashCheck($token, $user->remember_token)) {
 					// Finally, user can login
-					$_SESSION[ $this->c->get('myConfig')['auth']['session'] ] = $user->user_id;
+					$_SESSION[ $this->c['myConfig']->get('auth.session') ] = $user->user_id;
 					$this->app->auth = $user;
 				}
 				else {
